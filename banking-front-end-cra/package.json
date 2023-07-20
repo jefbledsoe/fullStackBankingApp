@@ -2,7 +2,7 @@
   "name": "banking-front-end",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:9000",
+  "proxy": "https://jefbledsoe-banking-app-0b47320846be.herokuapp.com/",
   "dependencies": {
     "@auth0/auth0-react": "^2.2.0",
     "@auth0/auth0-spa-js": "^2.1.0",
