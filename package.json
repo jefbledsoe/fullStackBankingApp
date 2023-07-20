@@ -4,7 +4,8 @@
     "description": "banking app back end for capstone project",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node ./banking-back-end/server.js"
+        "start": "node ./banking-back-end/server.js",
+        "heroku-postbuild": "ng build --prod" 
     },
     "author": "jefbleds@outlook.com",
     "license": "MIT",
