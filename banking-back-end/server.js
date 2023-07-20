@@ -19,15 +19,29 @@ app.options("*", cors());
 app.use(bodyParser.json());
 
 // serve static assets normally
-app.use(
-  express.static(path.join(__dirname, "..", "..", "banking-front-end-cra", "build"))
-);
+// app.use(
+//   express.static(path.join(__dirname, "..", "banking-front-end-cra", "build"))
+// );
 
 // should initially handle the file serve the the endpoint /
 // but only handle data CRUD ops for any other endpoint
+const indexHtmlPath = path.join(
+  __dirname,  
+  "..",
+  "banking-front-end-cra",
+  "build",
+  "index.html"
+);
+console.log("Index HTML Path:", indexHtmlPath);
+
+app.get("/", function (req, res) {
+  res.sendFile(indexHtmlPath);
+});
+
+
 app.get("/", function (req, res) {
   res.sendFile(
-    path.join(__dirname, "..", "..", "banking-front-end-cra", "build", "index.html")
+    path.join(__dirname, "..", "banking-front-end-cra", "build", "index.html")
   );
 });
 
