@@ -1,0 +1,17 @@
+{
+    "name": "bankingappcapstoneproject",
+    "version": "1.0.0",
+    "description": "banking app back end for capstone project",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node ./banking-back-end/server.js"
+    },
+    "author": "jefbleds@outlook.com",
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^16.3.1"
+    },
+    "devDependencies": {
+        "react-app-rewired": "^2.2.1"
+    }
+}
