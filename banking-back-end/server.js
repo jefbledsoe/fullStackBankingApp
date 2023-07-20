@@ -20,14 +20,14 @@ app.use(bodyParser.json());
 
 // serve static assets normally
 app.use(
-  express.static(path.join(__dirname, "../", "banking-front-end-cra", "build"))
+  express.static(path.join(__dirname, "../", "banking-front-end-cra", "public"))
 );
 
 // should initially handle the file serve the the endpoint /
 // but only handle data CRUD ops for any other endpoint
 app.get("/", function (req, res) {
   res.sendFile(
-    path.join(__dirname, "../", "banking-front-end-cra", "build", "index.html")
+    path.join(__dirname, "../", "banking-front-end-cra", "public", "index.html")
   );
 });
 
