@@ -1,1 +1,1 @@
-web: npm start
+web: node ./banking-back-end/server.js
