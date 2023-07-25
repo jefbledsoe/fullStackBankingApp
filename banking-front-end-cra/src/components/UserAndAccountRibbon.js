@@ -11,6 +11,9 @@ function UserAndAccountRibbon(props) {
   
   }, [activeUser]);
 
+  function handleLogout() {
+    logout({ returnTo: window.location.origin });
+  }
   function handleTempNewUser(){
     if(activeUser.firstName === undefined || activeUser.lastName === undefined) {
       return "New User";
@@ -28,7 +31,7 @@ function UserAndAccountRibbon(props) {
         <div className="text-end col align-middle">
           {/* Logout button */}
           <button 
-            onClick={logout}
+            onClick={handleLogout}
             className="btn btn-danger m-3 fs"
           >
             Logout

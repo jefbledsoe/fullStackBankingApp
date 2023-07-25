@@ -108,7 +108,8 @@ function Spa() {
         });
     }
   }
-  // on Authentcation change, login or out, if authenticated, get and set set active account and user
+  // on Authentcation change, login or out, if authenticated, 
+  // get and set set active account and user
   useEffect(() => {
     handleAuthChange();
   }, [isAuthenticated]);
