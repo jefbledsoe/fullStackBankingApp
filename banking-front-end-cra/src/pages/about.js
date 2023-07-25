@@ -8,7 +8,7 @@ function About() {
 
   const { setCurrentPath } = useContext(UserContext);
   useEffect(() => {
-    setCurrentPath("/about/");
+    setCurrentPath("/about");
   }, []);
   
   return (

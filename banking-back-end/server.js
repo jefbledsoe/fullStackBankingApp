@@ -25,20 +25,6 @@ app.use(
 
 // should initially handle the file serve the the endpoint /
 // but only handle data CRUD ops for any other endpoint
-const indexHtmlPath = path.join(
-  __dirname,  
-  "..",
-  "banking-front-end-cra",
-  "build",
-  "index.html"
-);
-console.log("Index HTML Path:", indexHtmlPath);
-
-// app.get("/", function (req, res) {
-//   res.sendFile(indexHtmlPath);
-// });
-
-
 app.get("/", function (req, res) {
   res.sendFile(
     path.join(__dirname, "..", "banking-front-end-cra", "build", "index.html")
@@ -57,30 +43,53 @@ app.post("/createNewAccount/:email", function (req, res) {
 });
 
 // endpoint to add an authorized user to an account
-app.post(
-  "/addAuthorizedUser/:accountNumber/:firstName/:lastName/:email/:phoneNumber",
+app.post("/addAuthorizedUser/:accountNumber",
   function (req, res) {
     // using the dal to create a new account
+    
     dal
       .addAuthorizedUser(
         req.params.accountNumber,
-        req.params.firstName,
-        req.params.lastName,
-        req.params.email,
-        req.params.phoneNumber
+        req.body
       )
       .then((account) => {
-        // console.log("response from addAuthorizedUser", account);
-        res.send(account);
+        console.log("response from addAuthorizedUser", account.value);
+        res.send(account.value);
       });
   }
 );
+
+// endpoint to add user info to an account
+app.put("/addUserInfo/:email", function (req, res) {
+  // using the dal to create a new account
+  
+  // console.log("req.params.email :", req.params.email);
+  // console.log("req.body :", req.body);
+  dal
+    .addUserInfo(
+      req.params.email,
+      req.body
+    )
+    .then((account) => {
+      // console.log("response from addUserInfo", account);
+      res.send(account);
+    });
+});
 
 // endpoint to get a specific account
 app.get("/getAccount/:email", function (req, res) {
   // using the dal to create a new account
   dal.getAccount(req.params.email).then((account) => {
     // console.log("response from getAccount", account);
+    res.send(account);
+  });
+});
+
+// endpoint to get a specific user information
+app.get("/getUserInfo/:email", function (req, res) {
+  // using the dal to create a new account
+  dal.getUserInfo(req.params.email).then((account) => {
+    // console.log("response from getUserInfo", account);
     res.send(account);
   });
 });

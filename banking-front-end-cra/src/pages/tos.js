@@ -6,7 +6,7 @@ function TOS() {
   const { setCurrentPath} = useContext(UserContext);
 
   useEffect(() => {
-    setCurrentPath("/tos/");
+    setCurrentPath("/tos");
   }, []);
 
   return (

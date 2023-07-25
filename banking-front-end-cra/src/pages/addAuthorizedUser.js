@@ -1,42 +1,48 @@
 import React, { useContext, useEffect, useState } from "react";
 import superagent from "superagent";
 import { UserContext } from "../utils/context";
-import { useAuth0 } from "@auth0/auth0-react";
 import Card from "react-bootstrap/Card";
-import { Form, Button, Alert, Row, Col } from "react-bootstrap";
-import { PatternFormat, NumericFormat } from "react-number-format";
+import { Form, Button, Alert } from "react-bootstrap";
+import { PatternFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
 
-function CreateAccount() {
+function AddAuthorizedUser() {
   // form states
   const [firstName, setFirstName] = useState("");
-  const [showFirstNameAlert, setShowFirstNameAlert] = useState(false);
   const [lastName, setLastName] = useState("");
-  const [showLastNameAlert, setShowLastNameAlert] = useState(false);
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [showFirstNameAlert, setShowFirstNameAlert] = useState(false);
+  const [showLastNameAlert, setShowLastNameAlert] = useState(false);
   const [showPhoneNumberAlert, setShowPhoneNumberAlert] = useState(false);
+  const [showAddressAlert, setShowAddressAlert] = useState(false);
+  const [showCityAlert, setShowCityAlert] = useState(false);
+  const [showStateAlert, setShowStateAlert] = useState(false);
+  const [showZipcodeAlert, setShowZipcodeAlert] = useState(false);
+  const [showEmailAlert, setShowEmailAlert] = useState(false);
 
   const {
     setCurrentPath,
-    setActiveUser,
     setActiveAccount,
     activeUser,
     setIsNewUser,
+    activeAccount,
   } = useContext(UserContext);
-  const { user } = useAuth0();
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCurrentPath("/createaccount");
+    setCurrentPath("/addauthorizeduser");
   }, []);
 
   async function handleFormSubmit(e) {
     e.preventDefault();
-    console.log("hitting handleFormSubmit");
+    // validate form fields
     firstName === ""
       ? setShowFirstNameAlert(true)
       : setShowFirstNameAlert(false);
@@ -44,31 +50,48 @@ function CreateAccount() {
     phoneNumber === ""
       ? setShowPhoneNumberAlert(true)
       : setShowPhoneNumberAlert(false);
-    if (firstName === "" || lastName === "" || phoneNumber === "") return;
+    email === "" ? setShowEmailAlert(true) : setShowEmailAlert(false);
+    address === "" ? setShowAddressAlert(true) : setShowAddressAlert(false);
+    city === "" ? setShowCityAlert(true) : setShowCityAlert(false);
+    state === "" ? setShowStateAlert(true) : setShowStateAlert(false);
+    zipcode === "" ? setShowZipcodeAlert(true) : setShowZipcodeAlert(false);
+    // if any fields are empty, return
+    if (
+      firstName === "" ||
+      lastName === "" ||
+      phoneNumber === "" ||
+      email === "" ||
+      city === "" ||
+      state === "" ||
+      zipcode === "" ||
+      address === ""
+    )
+      return;
 
     // all good if we get here
     // if all fields are filled out, then create user
     let userInfo = {
-      firstName: firstName.toLowerCase().trim(),
-      lastName: lastName.toLowerCase().trim(),
-      address: address.toLowerCase().trim(),
-      city: city.toLowerCase().trim(),
-      state: state, // state is a select, no need to clean
-      zipcode: zipcode, // zipcode is formatted, no need to clean
-      phoneNumber: phoneNumber, // phoneNumber is formatted, no need to clean
+      accessLevel: 1,
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      city: city,
+      state: state,
+      zipcode: zipcode,
+      phoneNumber: phoneNumber,
+      email: email,
     };
     // superagent put to add user info to database
-    let emailToCheck = user.email.toLowerCase().trim();
     await superagent
-      .put(`/addUserInfo/${emailToCheck}`)
+      .post(`/addAuthorizedUser/${activeAccount.accountNumber}`)
       .send(userInfo)
       .then((res) => {
-        console.log("CreateAccount - response from addUserInfo", res.body);
-        setActiveUser({ ...activeUser, ...userInfo });
+        console.log("response from addUserInfo", res.body);
+        setActiveAccount(res.body);
       });
-    // superagent get to get account info from database
-    await superagent.get(`/getAccount/${emailToCheck}`).then((res) => {
-      console.log("CreateAccount - response from getAccount", res.body);
+    // get updated account info from database and set active account
+    await superagent.get(`/getAccount/${activeUser.email}`).then((res) => {
+      console.log("response from getAccount", res.body);
       setActiveAccount(res.body);
     });
 
@@ -80,28 +103,28 @@ function CreateAccount() {
     setState("");
     setZipcode("");
     setPhoneNumber("");
-
-    // shows new user message on account details page
+    setEmail("");
+    // SPA will update context with user info
+    // finished with create account, send to home
     setIsNewUser(true);
-
-    // account is fully created, send to account details page
     navigate("/accountdetails");
   }
-
   return (
     <div className="container">
       <Card>
         <Card.Header className="fw-bold">
-          Weloome to Bottomless Vault Banking
+          Fill out the user information below to add an authorized user to your
+          account.
           <br />
-          Finish creating your account by correctly filling out the form below.
+          When the user signs up, they will be able to view this account
+          information.
         </Card.Header>
         <Card.Body>
           <Form onSubmit={handleFormSubmit}>
+            {/* Form to capture firstName, lastName, address, email, city, state, zipcode, and phoneNumber */}
             <Form.Group className="mb-3" controlId="userInfo">
               <Form.Label>First Name</Form.Label>
               <Form.Control
-                className="mb-3"
                 type="text"
                 placeholder="Enter first name"
                 value={firstName}
@@ -110,13 +133,16 @@ function CreateAccount() {
                   setShowFirstNameAlert(false);
                 }}
               />
-              <Alert variant="danger" show={showFirstNameAlert}>
+              <Alert
+                className="pt-1 pb-1 mt-1"
+                variant="danger"
+                show={showFirstNameAlert}
+              >
                 First Name Is Required
               </Alert>
-              {/* field break */}
+              {/*  */}
               <Form.Label>Last Name</Form.Label>
               <Form.Control
-                className="mb-3"
                 type="text"
                 placeholder="Enter last name"
                 value={lastName}
@@ -125,13 +151,16 @@ function CreateAccount() {
                   setShowLastNameAlert(false);
                 }}
               />
-              <Alert variant="danger" show={showLastNameAlert}>
+              <Alert
+                className="pt-1 pb-1 mt-1"
+                variant="danger"
+                show={showLastNameAlert}
+              >
                 Last Name Is Required
               </Alert>
-              {/* field break */}
+              {/*  */}
               <Form.Label>Address</Form.Label>
               <Form.Control
-                className="mb-3"
                 type="text"
                 placeholder="Enter address"
                 value={address}
@@ -139,10 +168,16 @@ function CreateAccount() {
                   setAddress(e.target.value);
                 }}
               />
-              {/* field break */}
+              <Alert
+                className="pt-1 pb-1 mt-1"
+                variant="danger"
+                show={showAddressAlert}
+              >
+                Address Is Required
+              </Alert>
+              {/*  */}
               <Form.Label>City</Form.Label>
               <Form.Control
-                className="mb-3"
                 type="text"
                 placeholder="Enter city"
                 value={city}
@@ -150,10 +185,22 @@ function CreateAccount() {
                   setCity(e.target.value);
                 }}
               />
-              {/* field break */}
+              <Alert
+                className="pt-1 pb-1 mt-1"
+                variant="danger"
+                show={showCityAlert}
+              >
+                City Is Required
+              </Alert>
+              {/*  */}
               <Form.Label>State</Form.Label>
-              <Form.Select aria-label="Default select example">
-                <option>- Select A State -</option>
+              <Form.Select
+                title="- Select a state -"
+                onChange={(e) => {
+                  setState(e.target.value);
+                }}
+              >
+                <option value=""> - Select -</option>
                 <option value="AL">Alabama</option>
                 <option value="AK">Alaska</option>
                 <option value="AZ">Arizona</option>
@@ -206,7 +253,14 @@ function CreateAccount() {
                 <option value="WI">Wisconsin</option>
                 <option value="WY">Wyoming</option>
               </Form.Select>
-              {/* field break */}
+              <Alert
+                className="pt-1 pb-1 mt-1"
+                variant="danger"
+                show={showStateAlert}
+              >
+                State Is Required
+              </Alert>
+              {/*  */}
               <Form.Label>Zipcode</Form.Label>
               <PatternFormat
                 className="form-control"
@@ -217,7 +271,14 @@ function CreateAccount() {
                   setZipcode(e.target.value);
                 }}
               />
-              {/* field break */}
+              <Alert
+                className="pt-1 pb-1 mt-1"
+                variant="danger"
+                show={showZipcodeAlert}
+              >
+                Zipcode Is Required
+              </Alert>
+              {/*  */}
               <Form.Label>Phone Number</Form.Label>
               <PatternFormat
                 className="form-control"
@@ -229,11 +290,31 @@ function CreateAccount() {
                   setShowPhoneNumberAlert(false);
                 }}
               />
-              <br />
-              <Alert variant="danger" show={showPhoneNumberAlert}>
+              <Alert
+                className="pt-1 pb-1 mt-1"
+                variant="danger"
+                show={showPhoneNumberAlert}
+              >
                 Phone Number Is Required
               </Alert>
-              {/* field break */}
+              {/*  */}
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                placeholder="Enter email address"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setShowEmailAlert(false);
+                }}
+              />
+              <Alert
+                className="pt-1 pb-1 mt-1"
+                variant="danger"
+                show={showEmailAlert}
+              >
+                Email Is Required
+              </Alert>
+              {/*  */}
               <Button variant="success" type="submit">
                 Submit
               </Button>
@@ -247,4 +328,4 @@ function CreateAccount() {
   );
 }
 
-export default CreateAccount;
+export default AddAuthorizedUser;

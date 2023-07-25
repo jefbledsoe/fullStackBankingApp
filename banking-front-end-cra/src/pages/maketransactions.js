@@ -46,7 +46,7 @@ function MakeTransactions() {
   }
 
   useEffect(() => {
-    setCurrentPath("/maketransactions/");
+    setCurrentPath("/maketransactions");
   }, []);
 
   return (

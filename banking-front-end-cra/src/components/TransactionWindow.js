@@ -144,7 +144,7 @@ function TransactionWindow(props) {
       amount: parseInt(amount),
       vendor: transVendor,
       category: transCategory,
-      transactor: `${activeUser.email}`,
+      transactor: `${activeUser.firstName} ${activeUser.lastName}`,
       balance: parseInt(activeAccount.balance) + parseInt(amount),
     };
 

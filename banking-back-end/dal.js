@@ -76,7 +76,6 @@ async function createNewAccount(email) {
     console.log("account", account);
   } finally {
     //closing the connection to the database
-    console.log("closing connection");
     await client.close();
   }
   console.log("newAccount", newAccount);
@@ -89,19 +88,10 @@ async function createNewAccount(email) {
 //and add the authorized user to the account then return the entire account
 async function addAuthorizedUser(
   accountNumberToFind,
-  firstName,
-  lastName,
-  email,
-  phoneNumber
+  newUser
 ) {
   //creating a new authorized user
-  let newAuthorizedUser = {
-    accessLevel: 1, // all new authorized users will have access level 1 by default
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    phoneNumber: phoneNumber,
-  };
+  
   let result = null;
 
   try {
@@ -113,15 +103,16 @@ async function addAuthorizedUser(
     //DB CRUD op - create/insertOne
     result = await accountsCollection.findOneAndUpdate(
       { accountNumber: parseInt(accountNumberToFind) },
-      { $push: { authorizedUsers: newAuthorizedUser } },
+      { $push: { authorizedUsers: newUser } },
       { new: true },
       (err, res) => {
         err ? reject(err) : resolve(res);
+        console.log("result", result);
       }
     );
   } finally {
     //closing the connection to the database
-    console.log("closing connection");
+
     await client.close();
   }
   //returning the new account
@@ -137,10 +128,48 @@ async function getAccount(userEmailToFind) {
     const db = client.db("badBankAccounts");
     const accountsCollection = db.collection("fakeAccounts");
 
+    //DB CRUD op - read/findOne
+    accountFound = await accountsCollection.findOne(
+      { authorizedUsers: { $elemMatch: { email: userEmailToFind } } },
+      (err, res) => {
+        err ? reject(err) : resolve(res);
+      }
+    );
+
+    console.log("accountFound", accountFound);
+  } finally {
+    //closing the connection to the database
+    await client.close();
+  }
+  //returning the found account
+  return accountFound;
+}
+
+
+async function getUserInfo(userEmailToFind) {
+  let accountFound = null;
+  try {
+    //connecting to the database
+    await client.connect();
+    const db = client.db("badBankAccounts");
+    const accountsCollection = db.collection("fakeAccounts");
+
     //DB CRUD op - create/insertOne
     ////////////////// BUG HERE - I THINK ITS NOT THE RIGHT QUERY ///////////////////////
     accountFound = await accountsCollection.findOne(
       { authorizedUsers: { $elemMatch: { email: userEmailToFind } } },
+      {
+        projection: {
+          _id: 0, // Exclude the _id field
+          accountNumber: 0, // Exclude the accountNumber field
+          accountCreationDate: 0, // Exclude the accountCreationDate field
+          balance: 0, // Exclude the balance field
+          transactions: 0, // Exclude the transactions field
+          authorizedUsers: {
+            $elemMatch: { email: userEmailToFind }, // Include only the matched element in authorizedUsers array
+          },
+        },
+      },
       (err, res) => {
         err ? reject(err) : resolve(res);
       }
@@ -149,11 +178,48 @@ async function getAccount(userEmailToFind) {
     // console.log("accountFound", accountFound);
   } finally {
     //closing the connection to the database
-    console.log("closing connection");
     await client.close();
   }
   //returning the found account
   return accountFound;
+}
+
+//this function will take an email and user info and add the user info to the account
+async function addUserInfo(email, userInfo) {
+  let result = null;
+  // console.log("email", email);
+  // console.log("userInfo", userInfo);
+  try {
+    //connecting to the database
+    await client.connect();
+    const db = client.db("badBankAccounts");
+    const accountsCollection = db.collection("fakeAccounts");
+
+    //DB CRUD op - create/insertOne
+    result = await accountsCollection.findOneAndUpdate(
+      { authorizedUsers: { $elemMatch: { email: email } } },
+      {
+        $set: {
+          "authorizedUsers.$.firstName": userInfo.firstName,
+          "authorizedUsers.$.lastName": userInfo.lastName,
+          "authorizedUsers.$.address": userInfo.address,
+          "authorizedUsers.$.city": userInfo.city,
+          "authorizedUsers.$.state": userInfo.state,
+          "authorizedUsers.$.zipcode": userInfo.zipcode,
+          "authorizedUsers.$.phoneNumber": userInfo.phoneNumber,
+        },
+      },
+      { new: true },
+      (err, res) => {
+        err ? reject(err) : resolve(res);
+      }
+    );
+  } finally {
+    //closing the connection to the database
+    await client.close();
+  }
+  //returning the new account
+  return result;
 }
 
 //this function will take the account number and transaction information,
@@ -206,7 +272,6 @@ async function addTransaction(
     }
   } finally {
     //closing the connection to the database
-    console.log("closing connection");
     await client.close();
   }
 }
@@ -236,7 +301,6 @@ async function deleteTransaction(accountNumberToFind, transactionID) {
     }
   } finally {
     //closing the connection to the database
-    console.log("closing connection");
     await client.close();
   }
 }
@@ -255,7 +319,7 @@ async function sendOtherUserFunds(
   catagory,
   amount,
   balance
-) {}
+) {} ///////////// INCOMPLETE  //////////////
 
 module.exports = {
   createNewAccount,
@@ -264,4 +328,6 @@ module.exports = {
   getAccount,
   sendOtherUserFunds,
   deleteTransaction,
+  addUserInfo,
+  getUserInfo,
 };

@@ -29,7 +29,7 @@ function Login() {
 
 
   useEffect(() => {
-    setCurrentPath("/login/");
+    setCurrentPath("/login");
 
   }, []);
 

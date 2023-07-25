@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "/static/js/main.9bd3c8c7.js",
+    "main.js": "/static/js/main.2dd8e9ed.js",
+    "static/media/bankLogo.png": "/static/media/bankLogo.caff441c89d64e51e8d6.png",
     "static/media/bankicon2.jpg": "/static/media/bankicon2.338d883a64fecf0508ef.jpg",
-    "static/media/bankLogo.png": "/static/media/bankLogo.f5ca67a5401df93df780.png",
     "index.html": "/index.html",
-    "main.9bd3c8c7.js.map": "/static/js/main.9bd3c8c7.js.map"
+    "main.2dd8e9ed.js.map": "/static/js/main.2dd8e9ed.js.map"
   },
   "entrypoints": [
-    "static/js/main.9bd3c8c7.js"
+    "static/js/main.2dd8e9ed.js"
   ]
 }
