@@ -106,7 +106,7 @@ function AddAuthorizedUser() {
     setEmail("");
     // SPA will update context with user info
     // finished with create account, send to home
-    setIsNewUser(true);
+    setIsNewUser(false);
     navigate("/accountdetails");
   }
   return (

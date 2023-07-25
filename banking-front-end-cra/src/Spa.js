@@ -13,7 +13,6 @@ import MakeTransactions from "./pages/maketransactions.js";
 import AccountDetails from "./pages/accountDetails.js";
 
 //Component references
-import Nav from "./components/BankNavBar.js";
 import UserAndAccountRibbon from "./components/UserAndAccountRibbon.js";
 import AddAuthorizedUser from "./pages/addAuthorizedUser";
 import BankNavBar from "./components/BankNavBar.js";

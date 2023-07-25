@@ -17,8 +17,8 @@ function Home() {
       <Card>
         <Image
           className="m-3 mx-auto"
-          src={require("./bankicon.png")}
-          alt={require("./bankicon2.jpg")}
+          src={require("./../images/bankicon.png")}
+          alt={require("./../images/bankicon2.jpg")}
           width="400"
           height="400"
         ></Image>

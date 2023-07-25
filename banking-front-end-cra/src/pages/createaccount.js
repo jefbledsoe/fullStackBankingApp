@@ -82,7 +82,7 @@ function CreateAccount() {
     setPhoneNumber("");
 
     // shows new user message on account details page
-    setIsNewUser(true);
+    setIsNewUser(false);
 
     // account is fully created, send to account details page
     navigate("/accountdetails");

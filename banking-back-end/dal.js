@@ -4,7 +4,6 @@ const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
 
 // HELPERS FUNCTIONS --START
-
 async function generateNewAccountInfo() {
   //creating the new account
   let newAccount = {
@@ -44,7 +43,6 @@ async function generateNewAccountInfo() {
   console.log("newAccount", newAccount);
   return newAccount;
 }
-
 // HELPERS FUNCTIONS --END
 
 //creating a new account
@@ -136,7 +134,6 @@ async function getAccount(userEmailToFind) {
       }
     );
 
-    console.log("accountFound", accountFound);
   } finally {
     //closing the connection to the database
     await client.close();
@@ -145,7 +142,7 @@ async function getAccount(userEmailToFind) {
   return accountFound;
 }
 
-
+// this function will take an email and return the user info associated with that email
 async function getUserInfo(userEmailToFind) {
   let accountFound = null;
   try {
@@ -326,8 +323,8 @@ module.exports = {
   addAuthorizedUser,
   addTransaction,
   getAccount,
-  sendOtherUserFunds,
-  deleteTransaction,
   addUserInfo,
   getUserInfo,
 };
+
+

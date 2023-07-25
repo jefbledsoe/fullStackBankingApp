@@ -8,23 +8,12 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const dal = require("./dal.js");
 
-// console.log("process.env.MONGO_URI inside server.js", process.env.MONGO_URI);
-
-// middleware
-// coors allows us to make requests from the front end to the back end on different ports, "origins"
 app.use(cors());
 app.options("*", cors());
-
-// body parser allows us to parse the body of the request, which is key for any post request that has a body
 app.use(bodyParser.json());
-
-// serve static assets normally
 app.use(
   express.static(path.join(__dirname, "..", "banking-front-end-cra", "build"))
 );
-
-// should initially handle the file serve the the endpoint /
-// but only handle data CRUD ops for any other endpoint
 app.get("/", function (req, res) {
   res.sendFile(
     path.join(__dirname, "..", "banking-front-end-cra", "build", "index.html")
@@ -118,22 +107,11 @@ app.post("/addTransaction/:accountNumber", function (req, res) {
     });
 });
 
-app.delete(
-  "/deleteTransaction/:accountNumber/:transactionID",
-  function (req, res) {
-    console.log("entering deleteTransaction endpoint");
-    console.log("req.body :", req.body);
-    // using the dal to add transaction
-    dal
-      .deleteTransaction(req.params.accountNumber, req.params.transactionID)
-      .then((transaction) => {
-        // console.log("response from deleteTransaction", transaction);
-        res.send(transaction);
-      });
-  }
-);
 
 // Listen for requests on PORT 9000 or the Process Environment PORT
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+
+
+
