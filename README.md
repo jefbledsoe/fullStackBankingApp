@@ -1,7 +1,7 @@
 # MERN Stack Banking App
 
 ## Description
-![alt text](./images/home.png) 
+![alt text](./images/homeImg.png) 
 
 This is a full stack banking application built using the MERN stack. It allows users to create accounts, deposit and withdraw money, and view their transaction history. The application is deployed on Heroku and can be accessed [here](https://mern-banking-app.herokuapp.com/).
 
