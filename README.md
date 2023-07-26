@@ -20,7 +20,7 @@ To install the application, clone the repository and run `npm install` to instal
 
 ## Usage
 
-The application can be accessed [here](https://mern-banking-app.herokuapp.com/). To create an account, click the "Create Account" button on the home page. Then, enter a username and password and click "Create Account". To log in, enter your username and password and click "Log In". Once logged in, you can deposit and withdraw money from your account. To deposit money, enter the amount you would like to deposit and click "Deposit". To withdraw money, enter the amount you would like to withdraw and click "Withdraw". To view your transaction history, click the "Transaction History" button. To log out, click the "Log Out" button.
+The application can be accessed [here](https://jefbledsoe-banking-app-0b47320846be.herokuapp.com/). To create an account, click the "Create Account" button on the home page. Then, enter a username and password and click "Create Account". To log in, enter your username and password and click "Log In". Once logged in, you can deposit and withdraw money from your account. To deposit money, enter the amount you would like to deposit and click "Deposit". To withdraw money, enter the amount you would like to withdraw and click "Withdraw". To view your transaction history, click the "Transaction History" button. To log out, click the "Log Out" button.
 
 For local usage of the application, the application can be accessed at http://localhost:9000. To use the application locally, you will need to create a .env file in front and bank end folders. The .envs files should contain the following information:
 
