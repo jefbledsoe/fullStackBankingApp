@@ -24,15 +24,15 @@ The application can be accessed [here](https://mern-banking-app.herokuapp.com/).
 
 For local usage of the application, the application can be accessed at http://localhost:9000. To use the application locally, you will need to create a .env file in front and bank end folders. The .envs files should contain the following information:
 
-_ in the banking-back-end folder create a .env file with the following information:
+- in the banking-back-end folder create a .env file with the following information:
 
-__ MONGO_URI= your mongoDB connection string
+    - MONGO_URI= your mongoDB connection string
 
-_in the banking-front-end folder create a .env file with the following information:
+- in the banking-front-end folder create a .env file with the following information:
 
-__ REACT_APP_AUTH0_DOMAIN= your auth0 domain
+    - REACT_APP_AUTH0_DOMAIN= your auth0 domain
 
-__REACT_APP_AUTH0_CLIENT_ID= your auth0 client id
+    - REACT_APP_AUTH0_CLIENT_ID= your auth0 client id
 
 ## License
 
